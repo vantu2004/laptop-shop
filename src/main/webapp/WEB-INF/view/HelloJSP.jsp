@@ -18,7 +18,7 @@
 	</head>
 	<body>
 		Hello from my JSP
-		<h1>${hello}</h1>
+		<h1>Homepage</h1>
 		<button>vantu</button>
 	</body>
 </html> 
