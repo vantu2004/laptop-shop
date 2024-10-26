@@ -49,6 +49,22 @@ public class User {
 		this.phone = phone;
 	}
 	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -95,7 +111,9 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
-				+ ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + "]";
+				+ ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + ", role=" + role.getName() + ", orders="
+				+ orders + "]";
 	}
+
 
 }

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Văn Tú - Dự án laptopshop" />
     <meta name="author" content="Văn Tú" />
-    <title>List users</title>
+    <title>Dashboard - Văn Tú</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="/css/styles.css" rel="stylesheet" />
 
@@ -27,43 +27,17 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage users</h1>
+                    <h1 class="mt-4">Manage orders</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Users</li>
+                        <li class="breadcrumb-item active">Orders</li>
                     </ol>
+                    <div>
+                    	Table order
+                    </div>
                     
-								<div class="d-flex justify-content-between mb-4">
-									<p>Table user</p>
-									<a href="/admin/user/create" class="btn btn-primary d-flex justify-content-center align-items-center">Create a user</a>
-								</div>
-								<hr/>
-								<table class="table table-striped table-hover">
-								  <thead>
-								    <tr>
-								      <th scope="col">ID</th>
-								      <th scope="col">Email</th>
-								      <th scope="col">Full name</th>
-								      <th scope="col">Action</th>
-								    </tr>
-								  </thead>
-								  <tbody>
-										<c:forEach var="user"  items="${users}">
-										   <tr>
-										      <th scope="row">${user.id}</th>
-										      <td>${user.email}</td>
-										      <td>${user.fullName}</td>
-										      <td>${user.role.name}</td>
-										      <td>
-										      		<a href="/admin/user/${user.id}" class="btn btn-success me-2">View</a>
-										      		<a href="/admin/user/update/${user.id}" class="btn btn-warning me-2">Update</a>
-										      		<a href="/admin/user/delete/${user.id}" class="btn btn-danger me-2">Delete</a>
-										      </td>
-										   </tr>
-										</c:forEach>
-								  </tbody>
-								</table>
-						</div>
+                    
+                    </div>
             </main>
             
             <jsp:include page="../layout/Footer.jsp" />
