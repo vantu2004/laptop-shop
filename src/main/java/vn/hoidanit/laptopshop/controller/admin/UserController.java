@@ -6,9 +6,12 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.Valid;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.UploadImageService;
 import vn.hoidanit.laptopshop.service.UserService;
@@ -27,13 +30,13 @@ public class UserController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@GetMapping("/")
-	public String getHomePage(Model model) {
-		List<User> arrUsers = this.userService.getAllUserByEmail("1@gmail.com");
-		System.out.println(arrUsers);
-
-		return "HelloJSP";
-	}
+//	@GetMapping("/")
+//	public String getHomePage(Model model) {
+//		List<User> arrUsers = this.userService.getAllUserByEmail("1@gmail.com");
+//		System.out.println(arrUsers);
+//
+//		return "HelloJSP";
+//	}
 
 	@GetMapping("/admin/user")
 	public String getUserPage(Model model) {
@@ -56,15 +59,27 @@ public class UserController {
 		return "admin/user/CreateNewUser";
 	}
 
-	@PostMapping(value = "/admin/user/create")
-	public String createUserPage(Model model, @ModelAttribute("newUser") User user,
-			@RequestParam("imageFile") MultipartFile file) throws IOException {
+	@PostMapping("/admin/user/create")
+	public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User user,
+		BindingResult newUserBindingResult, 
+		@RequestParam("imageFile") MultipartFile file) throws IOException {
 
-		// Đảm bảo file ko null để avatar hoặc là có trị hoặc là ko, giúp đảm bảo việc xuất ảnh bên ShowUser.jsp
-	    String avatar = null;
-	    if (file != null && !file.isEmpty()) {
-	        avatar = this.uploadImageService.handleSaveUploadFile(file, "avatar");
-	    }
+		// Validate thông tin tạo
+		List<FieldError> errors = newUserBindingResult.getFieldErrors();
+		for (FieldError error : errors) {
+			System.out.println(error.getField() + " - " + error.getDefaultMessage());
+		}
+
+		if (newUserBindingResult.hasErrors()) {
+			return "admin/user/CreateNewUser";
+		}
+		
+		// Đảm bảo file ko null để avatar hoặc là có trị hoặc là ko, giúp đảm bảo việc
+		// xuất ảnh bên ShowUser.jsp
+		String avatar = null;
+		if (file != null && !file.isEmpty()) {
+			avatar = this.uploadImageService.handleSaveUploadFile(file, "avatar");
+		}
 
 		// Hash pass
 		String hashPassword = this.passwordEncoder.encode(user.getPassword());
@@ -84,10 +99,10 @@ public class UserController {
 	@GetMapping("/admin/user/update/{id}") // GET
 	public String getUpdateUserPage(Model model, @PathVariable long id) {
 		User currentUser = this.userService.getInfoUserById(id);
-		
+
 		model.addAttribute("newUser", currentUser);
 		model.addAttribute("avatar", currentUser.getAvatar());
-		
+
 		return "admin/user/UpdateUser";
 	}
 
@@ -95,12 +110,13 @@ public class UserController {
 	public String postUpdateUser(Model model, @ModelAttribute("newUser") User user,
 			@RequestParam("imageFile") MultipartFile file) throws IOException {
 		User currentUser = this.userService.getInfoUserById(user.getId());
-		
-		// Đảm bảo file ko null để avatar hoặc là có trị hoặc là ko, giúp đảm bảo việc xuất ảnh bên UpdateUser.jsp
-	    String avatar = null;
-	    if (file != null && !file.isEmpty()) {
-	        avatar = this.uploadImageService.handleSaveUploadFile(file, "avatar");
-	    }
+
+		// Đảm bảo file ko null để avatar hoặc là có trị hoặc là ko, giúp đảm bảo việc
+		// xuất ảnh bên UpdateUser.jsp
+		String avatar = null;
+		if (file != null && !file.isEmpty()) {
+			avatar = this.uploadImageService.handleSaveUploadFile(file, "avatar");
+		}
 
 		if (currentUser != null) {
 			currentUser.setAddress(user.getAddress());
@@ -120,7 +136,7 @@ public class UserController {
 	public String getDeleteUserPage(Model model, @PathVariable long id) {
 		model.addAttribute("id", id);
 		model.addAttribute("newUser", new User());
-		
+
 		return "admin/user/DeleteUser";
 	}
 

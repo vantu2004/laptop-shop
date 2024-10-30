@@ -2,12 +2,18 @@ package vn.hoidanit.laptopshop.domain;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="products")
@@ -15,13 +21,37 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    
+    @NotNull(message = "Không được để trống")
+    @Size(min = 2, max = 100, message = "Tên sản phẩm phải từ 2 đến 100 ký tự")
     private String name;
+
+    @NotNull(message = "Không được để trống")
+    //	value = 0 nhưng thêm inclusive = "false" để nhận cả trường hợp 0.1
+    @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
     private double price;
+
     private String image;
+
+    //	Mặc dù có thể dùng max = 1500 để quy định số ký tự cho cột detailDesc vs varchar(1500) nhưng ko hiệu quả
+    //	@Size(min = 100, max = 1500, message = "Không được nhỏ hơn 100 và vượt quá 1500 ký tự")
+    @NotNull
+    @NotEmpty(message = "Không được để trống")
+    //	dùng mediumtext có thể lưu chuỗi nặng 4mb
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
+
+    //	@Size(min = 100, max = 500, message = "Không được nhỏ hơn 100 và vượt quá 500 ký tự")
+    @NotNull
+    @NotEmpty(message = "Không được để trống")
+    //	dùng mediumtext có thể lưu chuỗi nặng 4mb
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String shortDesc;
+
+    @NotNull(message = "Không được để trống")
+    @Min(value = 1, message = "Số lượng phải lớn hơn hoặc bằng 0")
     private long quantity;
+
     private long sold;
     private String factory;
     private String target;

@@ -48,15 +48,14 @@
 									<b>User information</b>
 								</div>
 								<ul class="list-group list-group-flush">
-									<li class="list-group-item">ID: ${infoUser.id}</li>
-									<li class="list-group-item">Email: ${infoUser.email}</li>
-									<li class="list-group-item">Full name: ${infoUser.fullName}</li>
-									<li class="list-group-item">Role: ${infoUser.role.name}</li>
-									<li class="list-group-item">Address: ${infoUser.address}</li>
-									<li class="list-group-item">Phone: ${infoUser.phone}</li>
+									<li class="list-group-item"><b>ID:</b> ${infoUser.id}</li>
+									<li class="list-group-item"><b>Email:</b> ${infoUser.email}</li>
+									<li class="list-group-item"><b>Full name:</b> ${infoUser.fullName}</li>
+									<li class="list-group-item"><b>Role:</b> ${infoUser.role.name}</li>
+									<li class="list-group-item"><b>Address:</b> ${infoUser.address}</li>
+									<li class="list-group-item"><b>Phone:</b> ${infoUser.phone}</li>
 									<li class="list-group-item">
 										<c:if test="${not empty infoUser.avatar}">
-											<!-- Image on the right side -->
 											<img src="/avatar/${infoUser.avatar}" alt="User Image"
 												class="img-thumbnail"
 												style="object-fit: cover; width: 100%;">
