@@ -11,10 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import vn.hoidanit.laptopshop.service.validator.StrongPassword;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +31,8 @@ public class User {
 	//	@Min(3), Min dùng cho int
 	@NotEmpty
 	@Size(min = 3, max = 100)
+	//	annotation tự định nghĩa
+	//	@StrongPassword (demo)
 	private String password;
 
 	@NotEmpty
@@ -139,11 +140,11 @@ public class User {
 		this.avatar = avatar;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
-				+ ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + ", role=" + role.getName()
-				+ ", orders=" + orders + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
+//				+ ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + ", role=" + role.getName()
+//				+ ", orders=" + orders + "]";
+//	}
 
 }

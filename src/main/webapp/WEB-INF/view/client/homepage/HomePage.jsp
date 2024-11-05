@@ -48,10 +48,8 @@
 
 	<jsp:include page="../layout/Header.jsp" />
 
-
-
 	<!-- Modal Search Start -->
-	<div class="modal fade" id="searchModal" tabindex="-1"
+	<!-- 	<div class="modal fade" id="searchModal" tabindex="-1"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-fullscreen">
 			<div class="modal-content rounded-0">
@@ -71,13 +69,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- Modal Search End -->
 
 	<jsp:include page="../layout/Banner.jsp" />
-
-	<jsp:include page="../layout/Feature.jsp" />
-
 
 	<!-- Fruits Shop Start-->
 	<div class="container-fluid fruite py-5">
@@ -117,9 +112,7 @@
 												<div
 													class="p-4 border border-secondary border-top-0 rounded-bottom">
 													<h4 style="font-size: 15px">
-													<a href="/product/${product.id}">
-													${product.name}
-													</a>
+														<a href="/product/${product.id}"> ${product.name} </a>
 													</h4>
 													<p style="font-size: 13px">${product.shortDesc}</p>
 													<div class="d-flex flex-lg-wrap">
@@ -149,10 +142,9 @@
 	</div>
 	<!-- Fruits Shop End-->
 
-
+	<jsp:include page="../layout/Feature.jsp" />
 
 	<jsp:include page="../layout/Footer.jsp" />
-
 
 	<!-- Back to Top -->
 	<a href="#"

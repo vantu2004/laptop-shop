@@ -9,6 +9,6 @@ public class DashboardController {
 	@GetMapping("/admin")
 	public String getDashBoard()
 	{
-		return "/admin/dashboard/DashBoard";
+		return "admin/dashboard/DashBoard";
 	}
 }

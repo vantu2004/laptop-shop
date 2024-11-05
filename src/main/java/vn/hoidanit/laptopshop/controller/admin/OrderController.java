@@ -9,6 +9,6 @@ public class OrderController {
 	@GetMapping("/admin/order")
 	public String getDashBoard()
 	{
-		return "/admin/order/Order";
+		return "admin/order/Order";
 	}
 }

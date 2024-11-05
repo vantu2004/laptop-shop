@@ -16,7 +16,6 @@ public class ItemController {
 		this.productService = productService;
 	}
 
-
 	@GetMapping("/product/{id}")
 	private String getHomePage(Model model,  @PathVariable long id) {
 		Product product = this.productService.getInfoProductById(id);

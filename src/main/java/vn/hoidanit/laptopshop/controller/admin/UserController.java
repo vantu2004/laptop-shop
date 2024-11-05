@@ -30,14 +30,6 @@ public class UserController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-//	@GetMapping("/")
-//	public String getHomePage(Model model) {
-//		List<User> arrUsers = this.userService.getAllUserByEmail("1@gmail.com");
-//		System.out.println(arrUsers);
-//
-//		return "HelloJSP";
-//	}
-
 	@GetMapping("/admin/user")
 	public String getUserPage(Model model) {
 		List<User> users = this.userService.getAllUser();
