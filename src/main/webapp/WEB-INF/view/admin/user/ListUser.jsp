@@ -74,6 +74,27 @@
 				</div>
 			</main>
 
+			<nav aria-label="Pagination">
+				<ul class="pagination justify-content-center">
+					<!-- Previous button -->
+					<li class="page-item ${currentPage == 1 ? 'disabled' : ''}"><a
+						class="page-link" href="/admin/user?page=${currentPage - 1}"
+						tabindex="-1">Previous</a></li>
+
+					<!-- Dynamic page links -->
+					<c:forEach begin="${startPage}" end="${endPage}" var="page">
+						<li class="page-item ${page == currentPage ? 'active' : ''}">
+							<a class="page-link" href="/admin/user?page=${page}">${page}</a>
+						</li>
+					</c:forEach>
+
+					<!-- Next button -->
+					<li class="page-item ${currentPage == endPage ? 'disabled' : ''}">
+						<a class="page-link" href="/admin/user?page=${currentPage + 1}">Next</a>
+					</li>
+				</ul>
+			</nav>
+
 			<jsp:include page="../layout/Footer.jsp" />
 
 		</div>

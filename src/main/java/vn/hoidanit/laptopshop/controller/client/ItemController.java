@@ -2,7 +2,11 @@ package vn.hoidanit.laptopshop.controller.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -170,4 +174,46 @@ public class ItemController {
 		return "redirect:/product/" + id;
 	}
 
+	@GetMapping("/products")
+	public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional) {
+		// currentPage mặc định = 1, dùng optional để đề phòng người dùng sửa chỉ số
+		// trang thành chuỗi bất kỳ
+		int currentPage = 1;
+		try {
+			if (pageOptional.isPresent()) {
+				currentPage = Integer.parseInt(pageOptional.get());
+			}
+		} catch (Exception ex) {
+
+		}
+		
+		// trang bắt đầu khi dùng pageable là 0
+		Pageable pageable = PageRequest.of(currentPage - 1, 6);
+
+		// lấy tất cả product theo kiểu Pageable đã được phân trang, mỗi trang 3 sản
+		// phẩm
+		Page<Product> pageProducts = this.productService.getAllProduct(pageable);
+		// convert Page sang List
+		List<Product> listProducts = pageProducts.getContent();
+
+		// Số lượng trang hiển thị tối đa
+		int maxDisplayPages = 5;
+		// đảm bảo trang bắt đầu ko < 1
+		int startPage = Math.max(1, currentPage - 2);
+		// đảm bảo trang kết thúc luôn < totalPages
+		int endPage = Math.min(startPage + maxDisplayPages - 1, pageProducts.getTotalPages());
+
+		// Điều chỉnh lại chỉ số cho trang bắt đầu
+		if (endPage - startPage + 1 < maxDisplayPages) {
+			startPage = Math.max(1, endPage - maxDisplayPages + 1);
+		}
+
+		// Truyền startPage và endPage về view
+		model.addAttribute("products", listProducts);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		
+		return "client/product/ListProduct";
+	}
 }

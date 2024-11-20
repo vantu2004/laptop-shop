@@ -3,11 +3,14 @@ package vn.hoidanit.laptopshop.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
+import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
@@ -22,12 +25,12 @@ public class OrderService {
 		this.orderDetailRepository = orderDetailRepository;
 	}
 	
-	public List<Order> getAllOrder(){
-		return this.orderRepository.findAll();
-	}
-	
 	public Optional<Order> getOrder(long id){
 		return this.orderRepository.findById(id);
+	}
+	
+	public Page<Order> getAllOrder(Pageable pageable) {
+		return this.orderRepository.findAll(pageable);
 	}
 
 	public void deleteOrderById(long id) {

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -59,7 +60,8 @@
 								<tr>
 									<th scope="row">${product.id}</th>
 									<td>${product.name}</td>
-									<td>${product.price}</td>
+									<td><fmt:formatNumber type="number"
+											value="${product.price}" /> VND</td>
 									<td>${product.factory}</td>
 									<td><a href="/admin/product/${product.id}"
 										class="btn btn-success me-2">View</a> <a
@@ -73,6 +75,27 @@
 					</table>
 				</div>
 			</main>
+
+			<nav aria-label="Pagination">
+				<ul class="pagination justify-content-center">
+					<!-- Previous button -->
+					<li class="page-item ${currentPage == 1 ? 'disabled' : ''}"><a
+						class="page-link" href="/admin/product?page=${currentPage - 1}"
+						tabindex="-1">Previous</a></li>
+
+					<!-- Dynamic page links -->
+					<c:forEach begin="${startPage}" end="${endPage}" var="page">
+						<li class="page-item ${page == currentPage ? 'active' : ''}">
+							<a class="page-link" href="/admin/product?page=${page}">${page}</a>
+						</li>
+					</c:forEach>
+
+					<!-- Next button -->
+					<li class="page-item ${currentPage == endPage ? 'disabled' : ''}">
+						<a class="page-link" href="/admin/product?page=${currentPage + 1}">Next</a>
+					</li>
+				</ul>
+			</nav>
 
 			<jsp:include page="../layout/Footer.jsp" />
 
