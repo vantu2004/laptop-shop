@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Văn Tú - Dự án laptopshop" />
     <meta name="author" content="Văn Tú" />
-    <title>Dashboard - Văn Tú</title>
+    <title>Delete</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="/css/styles.css" rel="stylesheet" />
 
@@ -30,13 +30,32 @@
                     <h1 class="mt-4">Manage orders</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Orders</li>
+                         <li class="breadcrumb-item active">Orders</li>
                     </ol>
-                    <div>
-                    	Table order
+
+					<div class="row">
+                        <div class="col-md-6 col-12 mx-auto">
+                            <h3>Delete a orders</h3>
+                            <hr />
+							<div class="alert alert-danger" role="alert">
+								Are you sure to delete this order!
+							</div>
+
+							<form:form method="post" action="/admin/order/delete" modelAttribute="newOrder">
+							
+								<div class="mb-3"  style="display: none">
+                                    <label class="form-label">Id:</label>
+                                    <form:input type="text" class="form-control" value="${id}" path="id"/>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end mt-3">
+									<button type="submit" class="btn btn-primary">Delete</button>
+								</div>
+								
+                           	</form:form>
+			                
+                        </div>
                     </div>
-                    
-                    
                     </div>
             </main>
             

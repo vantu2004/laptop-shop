@@ -115,16 +115,24 @@
 														<a href="/product/${product.id}"> ${product.name} </a>
 													</h4>
 													<p style="font-size: 13px">${product.shortDesc}</p>
-													<div class="d-flex flex-lg-wrap">
+													<div class="d-flex flex-lg-wrap justify-content-center">
 														<p class="text-dark fs-5 fw-bold mb-3"
 															style="font-size: 15px; text-align: center; width: 100%">
 															<fmt:formatNumber type="number" value="${product.price}" />
 															VND
 														</p>
-														<a href="#"
-															class="mx-auto btn border border-secondary rounded-pill px-3 text-primary"><i
-															class="fa fa-shopping-bag me-2 text-primary"></i> Add to
-															cart</a>
+														<form action="/add-product-to-cart/${product.id}"
+															method="post">
+															<div>
+																<input type="hidden" name="${_csrf.parameterName}"
+																	value="${_csrf.token}" />
+															</div>
+															<button
+																class="mx-auto btn border border-secondary rounded-pill px-3 text-primary">
+																<i class="fa fa-shopping-bag me-2 text-primary"></i> Add
+																to cart
+															</button>
+														</form>
 													</div>
 												</div>
 											</div>

@@ -2,7 +2,9 @@ package vn.hoidanit.laptopshop.domain;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,40 +14,94 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="orders")
+@Table(name = "orders")
 public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private double totalPrice;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    // nhiều order thuộc 1 user, giữ khóa ngoại -> owner
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	private double totalPrice;
 
-    @OneToMany(mappedBy = "order")
-    List<OrderDetail> orderDetails;
-    
-    public long getId() {
-        return id;
-    }
+	// nhiều order thuộc 1 user, giữ khóa ngoại -> owner
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	List<OrderDetail> orderDetails;
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
+	private String receiverName;
+	private String receiverAddress;
+	private String receiverPhone;
+	private String status;
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+	public long getId() {
+		return id;
+	}
 
-    @Override
-    public String toString() {
-        return "Order [id=" + id + ", totalPrice=" + totalPrice + "]";
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "Order [id=" + id + ", totalPrice=" + totalPrice + "]";
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+
+	public String getReceiverName() {
+		return receiverName;
+	}
+
+	public void setReceiverName(String receiverName) {
+		this.receiverName = receiverName;
+	}
+
+	public String getReceiverAddress() {
+		return receiverAddress;
+	}
+
+	public void setReceiverAddress(String receiverAddress) {
+		this.receiverAddress = receiverAddress;
+	}
+
+	public String getReceiverPhone() {
+		return receiverPhone;
+	}
+
+	public void setReceiverPhone(String receiverPhone) {
+		this.receiverPhone = receiverPhone;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 }

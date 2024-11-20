@@ -45,7 +45,7 @@
 							<hr />
 							<div class="card" style="width: 100%; position: relative;">
 								<div class="card-header">
-									<b>product information</b>
+									<b>Product information</b>
 								</div>
 								<ul class="list-group list-group-flush">
 									<li class="list-group-item"><b>ID:</b> ${infoProduct.id}</li>
