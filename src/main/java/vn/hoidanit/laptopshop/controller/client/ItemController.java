@@ -2,11 +2,11 @@ package vn.hoidanit.laptopshop.controller.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,9 @@ import jakarta.servlet.http.HttpSession;
 import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
 import vn.hoidanit.laptopshop.domain.Product;
+import vn.hoidanit.laptopshop.domain.Product_;
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoidanit.laptopshop.service.ProductService;
 
 @Controller
@@ -38,6 +40,8 @@ public class ItemController {
 		model.addAttribute("product", product);
 		model.addAttribute("id", id);
 
+		System.out.println("PRODUCT ID: " + id);
+
 		return "client/product/Detail";
 	}
 
@@ -53,6 +57,22 @@ public class ItemController {
 		this.productService.handleAddProductToCart(email, productId, session, 1);
 
 		return "redirect:/";
+	}
+
+	// xử lý ở home thì khi thêm product chỉ cần 1 là đc, nhưng trong detail product
+	// có thể thêm nhiều -> truyền động
+	@PostMapping("/add-product-from-view-detail")
+	public String handleAddProductFromViewDetail(@RequestParam("id") long id, @RequestParam("quantity") long quantity,
+			HttpServletRequest request) {
+
+		// bug xảy ra vì code bên js chỉ bắt sự kiện cập nhật quantity chỉ khi click,
+		// nếu ko click thì sẽ null -> lỗi
+
+		HttpSession session = request.getSession(false);
+		String email = (String) session.getAttribute("email");
+		this.productService.handleAddProductToCart(email, id, session, quantity);
+
+		return "redirect:/product/" + id;
 	}
 
 	@GetMapping("/cart")
@@ -162,39 +182,51 @@ public class ItemController {
 		return "client/cart/Thanks";
 	}
 
-	// xử lý ở home thì khi thêm product chỉ cần 1 là đc, nhưng trong detail product
-	// có thể thêm nhiều -> truyền động
-	@PostMapping("/add-product-from-view-detail")
-	public String handleAddProductFromViewDetail(@RequestParam("id") long id, @RequestParam("quantity") long quantity,
-			HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		String email = (String) session.getAttribute("email");
-		this.productService.handleAddProductToCart(email, id, session, quantity);
-
-		return "redirect:/product/" + id;
-	}
-
+	// Spring MVC cung cấp cơ chế tự ánh xạ value trong queryString vào DTO
 	@GetMapping("/products")
-	public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional) {
-		// currentPage mặc định = 1, dùng optional để đề phòng người dùng sửa chỉ số
-		// trang thành chuỗi bất kỳ
+	public String getProductPage(Model model, ProductCriteriaDTO productCriteriaDTO, HttpServletRequest request) {
+
 		int currentPage = 1;
 		try {
-			if (pageOptional.isPresent()) {
-				currentPage = Integer.parseInt(pageOptional.get());
+			if (productCriteriaDTO.getPage().isPresent()) {
+				currentPage = Integer.parseInt(productCriteriaDTO.getPage().get());
 			}
 		} catch (Exception ex) {
 
 		}
-		
+
 		// trang bắt đầu khi dùng pageable là 0
 		Pageable pageable = PageRequest.of(currentPage - 1, 6);
+		if (productCriteriaDTO.getSort() != null && productCriteriaDTO.getSort().isPresent()) {
+			String sort = productCriteriaDTO.getSort().get();
+			if (sort.equals("gia-tang-dan")) {
+				pageable = PageRequest.of(currentPage - 1, 6, Sort.by(Product_.PRICE).ascending());
+			} else if (sort.equals("gia-giam-dan")) {
+				pageable = PageRequest.of(currentPage - 1, 6, Sort.by(Product_.PRICE).descending());
+			}
+		}
 
 		// lấy tất cả product theo kiểu Pageable đã được phân trang, mỗi trang 3 sản
 		// phẩm
-		Page<Product> pageProducts = this.productService.getAllProduct(pageable);
+		Page<Product> pageProducts = this.productService.getAllProduct(pageable, productCriteriaDTO);
+
+//		Page<Product> pageProducts = this.productService.getAllProductMinPrice(minPrice, pageable);
+//		
+//		Page<Product> pageProducts = this.productService.getAllProductMaxPrice(maxPrice, pageable);
+//		
+//		Page<Product> pageProducts = this.productService.getAllProductFactory(factory, pageable);
+//		
+//		List<String> listFactory = Arrays.asList(factory.split(","));
+//		Page<Product> pageProducts = this.productService.getAllProductFromListFactory(listFactory, pageable);
+//		
+//		Page<Product> pageProducts = this.productService.getAllProductPrice(price, pageable);
+//		
+//		List<String> listPrice = Arrays.asList(price.split(","));
+//		Page<Product> pageProducts = this.productService.getAllProductFromListPrice(listPrice, pageable);
+
 		// convert Page sang List
-		List<Product> listProducts = pageProducts.getContent();
+		List<Product> listProducts = pageProducts.getContent().size() > 0 ? pageProducts.getContent()
+				: new ArrayList<>();
 
 		// Số lượng trang hiển thị tối đa
 		int maxDisplayPages = 5;
@@ -208,12 +240,35 @@ public class ItemController {
 			startPage = Math.max(1, endPage - maxDisplayPages + 1);
 		}
 
+		String queryString = request.getQueryString();
+		if (queryString != null && !queryString.isBlank()) {
+			// set page=??? rỗng để khi truyền qua view thì được thay thế bởi EL xuất
+			// page=??? bên đó + queryString đã bị làm rỗng page=???
+			queryString = queryString.replace("page=" + currentPage, "");
+		}
+
 		// Truyền startPage và endPage về view
 		model.addAttribute("products", listProducts);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
-		model.addAttribute("currentPage", currentPage);
-		
+		model.addAttribute("queryString", queryString);
+
 		return "client/product/ListProduct";
 	}
+
+//	private int parseIntOrDefault(String value) {
+//	    try {
+//	        return Integer.parseInt(value);
+//	    } catch (NumberFormatException e) {
+//	        return 1;
+//	    }
+//	}
+//
+//	private double parseDoubleOrDefault(String value) {
+//	    try {
+//	        return Double.parseDouble(value);
+//	    } catch (NumberFormatException e) {
+//	        return 0.0;
+//	    }
+//	}
 }

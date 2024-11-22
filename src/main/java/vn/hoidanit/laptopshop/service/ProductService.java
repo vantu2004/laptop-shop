@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpSession;
@@ -14,11 +15,13 @@ import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoidanit.laptopshop.repository.CartDetailRepository;
 import vn.hoidanit.laptopshop.repository.CartRepository;
 import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
+import vn.hoidanit.laptopshop.service.specification.ProductSpecs;
 
 @Service
 public class ProductService {
@@ -48,6 +51,121 @@ public class ProductService {
 	public Page<Product> getAllProduct(Pageable pageable) {
 		return this.productRepository.findAll(pageable);
 	}
+
+	public Page<Product> getAllProduct(Pageable pageable, ProductCriteriaDTO productCriteriaDTO) {
+
+		if (productCriteriaDTO.getTarget() != null || productCriteriaDTO.getPrice() != null
+				|| productCriteriaDTO.getFactory() != null) {
+			/*
+			 * tác dụng cũng giống dòng code tạo biến rỗng chứ ko null trong hàm
+			 * getAllProductFromListPrice nhưng khác biệt là lệnh này thao tác trực tiếp với
+			 * specification còn lệnh kia trong hàm getAllProductFromListPrice phải thao tác
+			 * với criteriaBuilder
+			 */
+			Specification<Product> combinedSpec = Specification.where(null);
+
+			if (productCriteriaDTO.getTarget() != null && productCriteriaDTO.getTarget().isPresent()) {
+				Specification<Product> currentSpecs = ProductSpecs.listTargetLike(productCriteriaDTO.getTarget().get());
+				combinedSpec = combinedSpec.and(currentSpecs);
+			}
+
+			if (productCriteriaDTO.getFactory() != null && productCriteriaDTO.getFactory().isPresent()) {
+				Specification<Product> currentSpecs = ProductSpecs
+						.listFactoryLike(productCriteriaDTO.getFactory().get());
+				combinedSpec = combinedSpec.and(currentSpecs);
+			}
+
+			if (productCriteriaDTO.getPrice() != null && productCriteriaDTO.getPrice().isPresent()) {
+				Specification<Product> currentSpecs = this
+						.getAllProductFromListPrice(productCriteriaDTO.getPrice().get(), pageable);
+				combinedSpec = combinedSpec.and(currentSpecs);
+			}
+
+			return this.productRepository.findAll(combinedSpec, pageable);
+		}
+		return this.getAllProduct(pageable);
+	}
+
+//	// tìm min-price tương đương tìm >= minPrice
+//	public Page<Product> getAllProductMinPrice(double minPrice, Pageable pageable) {
+//		return this.productRepository.findAll(ProductSpecs.minPriceLike(minPrice), pageable);
+//	}
+//
+//	// tìm max-price tương đương tìm <= maxPrice
+//	public Page<Product> getAllProductMaxPrice(double maxPrice, Pageable pageable) {
+//		return this.productRepository.findAll(ProductSpecs.maxPriceLike(maxPrice), pageable);
+//	}
+//
+//	// khác với dùng like trong ProductSpecs.nameLike (tìm chuỗi con) thì
+//	// ProductSpecs.factoryLike đang dùng equals, nếu tìm thấy = thì trả, ko = thì
+//	// ko
+//	// trả (so sánh kể cả chuỗi rỗng)
+//	public Page<Product> getAllProductFactory(String factory, Pageable pageable) {
+//		return factory != "" ? this.productRepository.findAll(ProductSpecs.factoryLike(factory), pageable)
+//				: this.getAllProduct(pageable);
+//	}
+//
+//	public Page<Product> getAllProductPrice(String price, Pageable pageable) {
+//		if (price.equals("10-toi-15-trieu")) {
+//			double minPrice = 10000000;
+//			double maxPrice = 15000000;
+//			return this.productRepository.findAll(ProductSpecs.priceLike(minPrice, maxPrice), pageable);
+//		} else if (price.equals("15-toi-30-trieu")) {
+//			double minPrice = 15000000;
+//			double maxPrice = 30000000;
+//			return this.productRepository.findAll(ProductSpecs.priceLike(minPrice, maxPrice), pageable);
+//		} else {
+//			System.out.println("0 trieu");
+//			return this.getAllProduct(pageable);
+//		}
+//	}
+
+	public Specification<Product> getAllProductFromListPrice(List<String> price, Pageable page) {
+		// giúp khởi tạo combinedSpec là rỗng chứ ko null để có thể thao tác với code
+		// bên dưới
+		Specification<Product> combinedSpec = (root, query, criteriaBuilder) -> criteriaBuilder.disjunction();
+		for (String p : price) {
+			double min = 0;
+			double max = 0;
+
+			// Set the appropriate min and max based on the price range string
+			switch (p) {
+			case "duoi-10-trieu":
+				min = 0;
+				max = 10000000;
+				break;
+			case "10-15-trieu":
+				min = 10000000;
+				max = 15000000;
+				break;
+			case "15-20-trieu":
+				min = 15000000;
+				max = 20000000;
+				break;
+			case "tren-10-trieu":
+				min = 20000000;
+				max = 2000000000;
+				break;
+			// Add more cases as needed
+			}
+
+			if (min != 0 && max != 0) {
+				Specification<Product> rangeSpec = ProductSpecs.listPriceLike(min, max);
+				/*
+				 * cộng gộp nhiều query vào, có thể thỏa 1 or nhiều query chứ ko như .and phải
+				 * thỏa tất cả query, ví dụ .or chỉ cần 1 case thỏa là đã có thể lọc nhưng .and
+				 * thì buộc tất cả case thỏa ms có thể lọc
+				 */
+				combinedSpec = combinedSpec.or(rangeSpec);
+			}
+		}
+
+		return combinedSpec;
+	}
+
+//	public Page<Product> getAllProductFromListFactory(List<String> listFactory, Pageable pageable) {
+//		return this.productRepository.findAll(ProductSpecs.listFactoryLike(listFactory), pageable);
+//	}
 
 	public Product getInfoProductById(long id) {
 		return this.productRepository.findById(id);
@@ -161,35 +279,35 @@ public class ProductService {
 				order.setReceiverAddress(receiverAddress);
 				order.setReceiverPhone(receiverPhone);
 				order.setStatus("PENDDING");
-				
+
 				double totalPrice = 0;
 				for (CartDetail cd : cartDetails) {
 					totalPrice += cd.getPrice() * cd.getQuantity();
 				}
 				order.setTotalPrice(totalPrice);
-				
+
 				// trước khi lưu thì ko có id, sau lưu thì có thể lấy đc
 				order = this.orderRepository.save(order);
-				
+
 				for (CartDetail cd : cartDetails) {
 					OrderDetail orderDetail = new OrderDetail();
 					orderDetail.setOrder(order);
 					orderDetail.setProduct(cd.getProduct());
 					orderDetail.setQuantity(cd.getQuantity());
 					orderDetail.setPrice(cd.getPrice());
-					
+
 					this.orderDetailRepository.save(orderDetail);
 				}
-				
-				//	sau khi tạo xong orderDetail thì xóa cartDetail
+
+				// sau khi tạo xong orderDetail thì xóa cartDetail
 				for (CartDetail cd : cartDetails) {
 					this.cartDetailRepository.deleteById(cd.getId());
 				}
-				
-				//	sau khi tạo đơn, xóa chi tiết giỏ hàng xong thì tiến hành xóa giỏ hàng
+
+				// sau khi tạo đơn, xóa chi tiết giỏ hàng xong thì tiến hành xóa giỏ hàng
 				this.cartRepository.deleteById(cart.getId());
-				
-				//	update session
+
+				// update session
 				session.setAttribute("sum", 0);
 			}
 		}
