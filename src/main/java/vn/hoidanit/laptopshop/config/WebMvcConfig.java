@@ -18,30 +18,29 @@ import org.springframework.web.servlet.view.JstlView;
 public class WebMvcConfig implements WebMvcConfigurer {
 
 //	Trả về ViewResolver xác định view được render từ tên trả về bởi controller
-  @Bean
-  public ViewResolver viewResolver() {
+	@Bean
+	public ViewResolver viewResolver() {
 //	Tìm file JSP dựa trên đường dẫn cung cấp
-    final InternalResourceViewResolver bean = new InternalResourceViewResolver();
-    bean.setViewClass(JstlView.class);
-    bean.setPrefix("/WEB-INF/view/");
-    bean.setSuffix(".jsp");
-    return bean;
-  }
+		final InternalResourceViewResolver bean = new InternalResourceViewResolver();
+		bean.setViewClass(JstlView.class);
+		bean.setPrefix("/WEB-INF/view/");
+		bean.setSuffix(".jsp");
+		return bean;
+	}
 
-  @Override
-  public void configureViewResolvers(ViewResolverRegistry registry) {
+	@Override
+	public void configureViewResolvers(ViewResolverRegistry registry) {
 //	Kích hoạt viewResolver được cấu hình phía trên
-    registry.viewResolver(viewResolver());
-  }
-  
-  @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-      registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
-      registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
-      registry.addResourceHandler("/avatar/**").addResourceLocations("/resources/images/avatar/");
-      registry.addResourceHandler("/productImage/**").addResourceLocations("/resources/images/productImage/");
-      registry.addResourceHandler("/client/**").addResourceLocations("/resources/client/");
-  }
+		registry.viewResolver(viewResolver());
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
+		registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+		registry.addResourceHandler("/avatar/**").addResourceLocations("/resources/images/avatar/");
+		registry.addResourceHandler("/productImage/**").addResourceLocations("/resources/images/productImage/");
+		registry.addResourceHandler("/client/**").addResourceLocations("/resources/client/");
+	}
 
 }
-

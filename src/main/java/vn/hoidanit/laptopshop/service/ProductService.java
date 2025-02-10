@@ -2,6 +2,7 @@ package vn.hoidanit.laptopshop.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -131,7 +132,7 @@ public class ProductService {
 			// Set the appropriate min and max based on the price range string
 			switch (p) {
 			case "duoi-10-trieu":
-				min = 0;
+				min = 1;
 				max = 10000000;
 				break;
 			case "10-15-trieu":
@@ -263,7 +264,7 @@ public class ProductService {
 	}
 
 	public void handlePlaceOrder(User user, HttpSession session, String receiverName, String receiverAddress,
-			String receiverPhone) {
+			String receiverPhone, String paymentMethod, String uuid) {
 
 		// lấy giỏ hàng từ người dùng
 		Cart cart = this.cartRepository.findByUser(user);
@@ -279,6 +280,10 @@ public class ProductService {
 				order.setReceiverAddress(receiverAddress);
 				order.setReceiverPhone(receiverPhone);
 				order.setStatus("PENDDING");
+				
+				order.setPaymentMethod(paymentMethod);
+				order.setPaymentStatus("PAYMENT_UNPAID");
+				order.setPaymentRef(paymentMethod.equals("COD") ? "UNKNOWN" : uuid);
 
 				double totalPrice = 0;
 				for (CartDetail cd : cartDetails) {
@@ -310,6 +315,17 @@ public class ProductService {
 				// update session
 				session.setAttribute("sum", 0);
 			}
+		}
+	}
+
+	public void updatePaymentStatus(String paymentStatus, String paymentTxnRef) {
+		// TODO Auto-generated method stub
+		Optional<Order> orderOptional = this.orderRepository.findByPaymentRef(paymentTxnRef);
+		if (orderOptional.isPresent()) {
+			Order order = orderOptional.get();
+			order.setPaymentStatus(paymentStatus);
+			
+			this.orderRepository.save(order);
 		}
 	}
 }

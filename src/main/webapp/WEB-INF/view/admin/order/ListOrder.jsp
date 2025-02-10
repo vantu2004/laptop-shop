@@ -49,6 +49,7 @@
 								<th scope="col">Total price</th>
 								<th scope="col">User</th>
 								<th scope="col">Status</th>
+								<th scope="col">Payment</th>
 								<th scope="col">Action</th>
 							</tr>
 						</thead>
@@ -61,6 +62,11 @@
 											value="${order.totalPrice}" /> VND</td>
 									<td>${order.user.fullName}</td>
 									<td>${order.status}</td>
+									<td>
+										<div>Status: ${order.paymentStatus}</div>
+										<div>Status: ${order.paymentRef}</div>
+										<div>Status: ${order.paymentMethod}</div>
+									</td>
 									<td><a href="/admin/order/${order.id}"
 										class="btn btn-success me-2">View</a> <a
 										href="/admin/order/update/${order.id}"

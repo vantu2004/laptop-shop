@@ -106,7 +106,7 @@
 								</div>
 
 							</div>
-							
+
 							<div class="col-12" id="targetFilter">
 								<div class="mb-2">
 									<b>Mục đích sử dụng</b>
@@ -189,16 +189,16 @@
 								</div>
 
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" id="sort-3" checked
-										value="gia-nothing" name="radio-sort"> <label
+									<input class="form-check-input" type="radio" id="sort-3"
+										checked value="gia-nothing" name="radio-sort"> <label
 										class="form-check-label" for="sort-3">Không sắp xếp</label>
 								</div>
 
 							</div>
 							<div class="col-12">
 								<button
-									class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4" id="btnFilter">
-									Lọc Sản Phẩm</button>
+									class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4"
+									id="btnFilter">Lọc Sản Phẩm</button>
 							</div>
 						</div>
 					</div>
@@ -245,28 +245,34 @@
 								</div>
 							</c:forEach>
 
-							<div class="pagination d-flex justify-content-center mt-5">
+							<c:if test="${products == null || products.isEmpty()}">
+								<p>Không tìm thấy sản phẩm</p>
+							</c:if>
+							<c:if test="${products != null && !products.isEmpty()}">							
+								<div class="pagination d-flex justify-content-center mt-5">
+									<!-- Previous button -->
+									<div class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+										<a class="page-link"
+											href="/products?page=${currentPage - 1}${queryString}"
+											tabindex="-1">Previous</a>
+									</div>
 
-								<!-- Previous button -->
-								<div class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-									<a class="page-link" href="/products?page=${currentPage - 1}${queryString}"
-										tabindex="-1">Previous</a>
+									<!-- Dynamic page links -->
+									<c:forEach begin="${startPage}" end="${endPage}" var="page">
+										<li class="page-item ${page == currentPage ? 'active' : ''}">
+											<a class="page-link"
+											href="/products?page=${page}${queryString}">${page}</a>
+										</li>
+									</c:forEach>
+
+									<!-- Next button -->
+									<div
+										class="page-item ${currentPage == endPage ? 'disabled' : ''}">
+										<a class="page-link"
+											href="/products?page=${currentPage + 1}${queryString}">Next</a>
+									</div>
 								</div>
-
-								<!-- Dynamic page links -->
-								<c:forEach begin="${startPage}" end="${endPage}" var="page">
-									<li class="page-item ${page == currentPage ? 'active' : ''}">
-										<a class="page-link" href="/products?page=${page}${queryString}">${page}</a>
-									</li>
-								</c:forEach>
-
-								<!-- Next button -->
-								<div
-									class="page-item ${currentPage == endPage ? 'disabled' : ''}">
-									<a class="page-link" href="/products?page=${currentPage + 1}${queryString}">Next</a>
-								</div>
-
-							</div>
+							</c:if>
 						</div>
 					</div>
 				</div>

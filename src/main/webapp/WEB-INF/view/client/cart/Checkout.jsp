@@ -144,6 +144,23 @@
 										<label>Số điện thoại</label> <input class="form-control"
 											name="receiverPhone" required />
 									</div>
+
+									<div class="col-12 form-group mb-3">
+										<label>Hình thức thanh toán</label>
+										<div class="form-check">
+											<input class="form-check-input" type="radio"
+												name="paymentMethod" value="COD" id="COD" checked> <label
+												class="form-check-label" for="COD"> Thanh toán khi
+												nhận hàng </label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="radio"
+												name="paymentMethod" value="BANKING" id="BANKING"> <label
+												class="form-check-label" for="BANKING"> Thanh toán
+												bằng ví VNPAY </label>
+										</div>
+									</div>
+
 									<div class="mt-4">
 										<i class="fas fa-arrow-left"></i> <a href="/cart">Quay lại
 											giỏ hàng</a>
@@ -179,10 +196,12 @@
 										VND
 									</p>
 								</div>
-
+								<div style="display:none;">
+									<input type="text" name="totalPrice" value="${totalPrice}">
+								</div>
 								<button
 									class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">
-									Xác nhận thanh toán</button>
+									Xác nhận đặt hàng</button>
 
 							</div>
 						</div>

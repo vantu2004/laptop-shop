@@ -1,7 +1,10 @@
 package vn.hoidanit.laptopshop.controller.client;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,14 +27,17 @@ import vn.hoidanit.laptopshop.domain.Product_;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoidanit.laptopshop.service.ProductService;
+import vn.hoidanit.laptopshop.service.VNPayService;
 
 @Controller
 public class ItemController {
 
 	private ProductService productService;
+	private VNPayService vNPayService;
 
-	public ItemController(ProductService productService) {
+	public ItemController(ProductService productService, VNPayService vNPayService) {
 		this.productService = productService;
+		this.vNPayService = vNPayService;
 	}
 
 	@GetMapping("/product/{id}")
@@ -164,7 +170,8 @@ public class ItemController {
 	@PostMapping("/place-order")
 	public String handlePlaceOrder(HttpServletRequest request, @RequestParam("receiverName") String receiverName,
 			@RequestParam("receiverAddress") String receiverAddress,
-			@RequestParam("receiverPhone") String receiverPhone) {
+			@RequestParam("receiverPhone") String receiverPhone, @RequestParam("paymentMethod") String paymentMethod,
+			@RequestParam("totalPrice") String totalPrice) throws NumberFormatException, UnsupportedEncodingException {
 
 		User currentUser = new User();
 
@@ -172,13 +179,32 @@ public class ItemController {
 		long id = (long) session.getAttribute("id");
 		currentUser.setId(id);
 
-		this.productService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone);
+		// guid dùng bên .NET, uuid dùng bên java
+		// tạo uuid bên controller vì phải lưu vào db và kết hợp để tạo URL thanh toán
+		final String uuid = UUID.randomUUID().toString().replace("-", "");
+
+		this.productService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone,
+				paymentMethod, uuid);
+
+		if (!paymentMethod.equals("COD")) {
+			// todo: redirect to VNPAY
+			String ip = this.vNPayService.getIpAddress(request);
+			String vnpUrl = this.vNPayService.generateVNPayURL(Double.parseDouble(totalPrice), uuid, ip);
+
+			return "redirect:" + vnpUrl;
+		}
 
 		return "redirect:/thanks";
 	}
 
 	@GetMapping("/thanks")
-	public String getThanksPage() {
+	public String getThanksPage(@RequestParam("vnp_ResponseCode") Optional<String> vnpayResponseCode,
+			@RequestParam("vnp_TxnRef") Optional<String> vnpayTxnRef) {
+		
+		if (vnpayResponseCode.isPresent() && vnpayTxnRef.isPresent()) {
+			String paymentStatus = vnpayResponseCode.get().equals("00") ? "PAYMENT_SUCCEED" : "PAYMENT_FAILED"; 
+			this.productService.updatePaymentStatus(paymentStatus, vnpayTxnRef.get());
+		}
 		return "client/cart/Thanks";
 	}
 
@@ -206,7 +232,7 @@ public class ItemController {
 			}
 		}
 
-		// lấy tất cả product theo kiểu Pageable đã được phân trang, mỗi trang 3 sản
+		// lấy tất cả product theo kiểu Pageable đã được phân trang, mỗi trang 6 sản
 		// phẩm
 		Page<Product> pageProducts = this.productService.getAllProduct(pageable, productCriteriaDTO);
 
@@ -252,6 +278,7 @@ public class ItemController {
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("queryString", queryString);
+		model.addAttribute("currentPage", currentPage);
 
 		return "client/product/ListProduct";
 	}

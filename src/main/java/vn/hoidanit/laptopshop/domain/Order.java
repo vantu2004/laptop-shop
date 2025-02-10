@@ -35,6 +35,14 @@ public class Order {
 	private String receiverPhone;
 	private String status;
 
+	private String paymentRef;
+	private String paymentStatus;
+	private String paymentMethod;
+
+	public String getPaymentRef() {
+		return paymentRef;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -104,4 +112,23 @@ public class Order {
 		this.status = status;
 	}
 
+	public void setPaymentRef(String paymentRef) {
+		this.paymentRef = paymentRef;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 }

@@ -63,6 +63,23 @@
 										</div>
 									</form>
 								</div>
+								<div>
+									<div style="text-align: center">
+										<span>Hoặc</span>
+									</div>
+									<div
+										class="d-flex justify-content-center align-items-center my-style="gap: 20px">
+										<a href="/oauth2/authorization/google"
+											title="Đăng nhập với Google" style="margin: 10px"> <img
+											height="40" width="40"
+											src="/client/img/provider/default-google.png" />
+										</a> <a href="/oauth2/authorization/github"
+											title="Đăng nhập với Github" style="margin: 10px"> <img
+											height="40" width="40"
+											src="/client/img/provider/default-github.png" />
+										</a>
+									</div>
+								</div>
 								<div class="card-footer text-center py-3">
 									<div class="small">
 										<a href="/register">Need an account? Sign up!</a>
