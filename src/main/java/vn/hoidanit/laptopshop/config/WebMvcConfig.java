@@ -36,6 +36,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		// addResourceHandler cho quyền truy cập tài nguyên bên trong logicPath
+		// addResourceLocations chỉ định đường dẫn đến thư mục được cấp quyền
 		registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
 		registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
 		registry.addResourceHandler("/avatar/**").addResourceLocations("/resources/images/avatar/");
