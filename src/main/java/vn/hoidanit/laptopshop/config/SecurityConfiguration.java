@@ -61,45 +61,49 @@ public class SecurityConfiguration {
 		return rememberMeServices;
 	}
 
-	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
-		// v6. lamda
-		http
-		.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-				.requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
+	 @Bean
+	    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
+	        http
+	            .requiresChannel(channel -> channel
+	                .anyRequest().requiresSecure())
+	            .headers(headers -> headers
+	                .httpStrictTransportSecurity(hsts -> hsts
+	                    .includeSubDomains(true)
+	                    .preload(true)
+	                    .maxAgeInSeconds(31536000)))
+	            .authorizeHttpRequests(authorize -> authorize
+	                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
+	                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+	                .anyRequest().authenticated())
+//	            .csrf(csrf -> csrf
+//	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//	                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+//	                .requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
+	            .oauth2Login(oauth2 -> oauth2
+	                .loginPage("/login")
+	                .defaultSuccessUrl("/", true)
+	                .failureUrl("/login?error")
+	                .userInfoEndpoint(user -> user.userService(new CustomOAuth2UserService(userService))))
+	            .sessionManagement(session -> session
+	                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+	                .invalidSessionUrl("/logout?expired")
+	                .maximumSessions(1)
+	                .maxSessionsPreventsLogin(false))
+	            .logout(logout -> logout
+	                .deleteCookies("JSESSIONID")
+	                .invalidateHttpSession(true))
+	            .rememberMe(r -> r
+	                .rememberMeServices(rememberMeServices()))
+	            .formLogin(form -> form
+	                .loginPage("/login")
+	                .failureUrl("/login?error")
+	                .successHandler(customSuccessHandler())
+	                .permitAll())
+	            .exceptionHandling(ex -> ex
+	                .accessDeniedPage("/access-deny"));
 
-//				.headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(
-//						"default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://trusted.cdn.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self';")))
-
-				.authorizeHttpRequests(authorize -> authorize
-						.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
-
-						.requestMatchers("/", "/login", "/product/**", "/register", "/products/**", "/client/**",
-								"/css/**", "/js/**", "/images/**")
-						.permitAll()
-
-						.requestMatchers("/admin/**").hasRole("ADMIN")
-
-						.anyRequest().authenticated())
-
-				.oauth2Login(
-						oauth2 -> oauth2.loginPage("/login").defaultSuccessUrl("/", true).failureUrl("/login?error")
-								.userInfoEndpoint(user -> user.userService(new CustomOAuth2UserService(userService))))
-
-				.sessionManagement((sessionManagement) -> sessionManagement
-						.sessionCreationPolicy(SessionCreationPolicy.ALWAYS).invalidSessionUrl("/logout?expired")
-						.maximumSessions(1).maxSessionsPreventsLogin(false))
-
-				.logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
-
-				.rememberMe(r -> r.rememberMeServices(rememberMeServices()))
-				.formLogin(formLogin -> formLogin.loginPage("/login").failureUrl("/login?error")
-						.successHandler(customSuccessHandler()).permitAll())
-				.exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
-
-		return http.build();
-	}
+	        return http.build();
+	    }
 
 	private static class CsrfProtectionMatcher implements RequestMatcher {
 		private static final Pattern CSRF_PATTERN = Pattern.compile("^[a-f0-9]{32}$");
