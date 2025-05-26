@@ -73,12 +73,12 @@ public class HomePageController {
 		String hashPassword = this.passwordEncoder.encode(user.getPassword());
 
 		user.setPassword(hashPassword);
-		// phải setRole vì role đang tham chiếu đến Role, và 1 người dùng thì phải có
-		// role
-		// mặc dịnh người dùng là USER
+		/*
+		 * phải setRole vì role đang tham chiếu đến Role, và 1 người dùng thì phải có
+		 * role, mặc dịnh người dùng là USER
+		 */
 		user.setRole(this.userservice.getRoleByName("USER"));
 
-		// save
 		this.userservice.handleSaveUser(user);
 
 		return "redirect:/login";
@@ -86,7 +86,6 @@ public class HomePageController {
 
 	@GetMapping("/login")
 	private String getLoginPage(Model model, @ModelAttribute("registerUser") RegisterDTO registerDTO) {
-
 		return "client/auth/Login";
 	}
 	

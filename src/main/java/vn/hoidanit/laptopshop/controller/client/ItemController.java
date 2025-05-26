@@ -236,20 +236,6 @@ public class ItemController {
 		// phẩm
 		Page<Product> pageProducts = this.productService.getAllProduct(pageable, productCriteriaDTO);
 
-//		Page<Product> pageProducts = this.productService.getAllProductMinPrice(minPrice, pageable);
-//		
-//		Page<Product> pageProducts = this.productService.getAllProductMaxPrice(maxPrice, pageable);
-//		
-//		Page<Product> pageProducts = this.productService.getAllProductFactory(factory, pageable);
-//		
-//		List<String> listFactory = Arrays.asList(factory.split(","));
-//		Page<Product> pageProducts = this.productService.getAllProductFromListFactory(listFactory, pageable);
-//		
-//		Page<Product> pageProducts = this.productService.getAllProductPrice(price, pageable);
-//		
-//		List<String> listPrice = Arrays.asList(price.split(","));
-//		Page<Product> pageProducts = this.productService.getAllProductFromListPrice(listPrice, pageable);
-
 		// convert Page sang List
 		List<Product> listProducts = pageProducts.getContent().size() > 0 ? pageProducts.getContent()
 				: new ArrayList<>();
