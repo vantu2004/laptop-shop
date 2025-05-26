@@ -68,8 +68,8 @@ public class SecurityConfiguration {
 				.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 				.requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
 
-				.headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(
-						"default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://trusted.cdn.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self';")))
+//				.headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(
+//						"default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://trusted.cdn.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self';")))
 
 				.authorizeHttpRequests(authorize -> authorize
 						.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
