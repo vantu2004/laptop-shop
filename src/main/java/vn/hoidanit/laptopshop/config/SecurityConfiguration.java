@@ -147,7 +147,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -200,8 +199,9 @@ public class SecurityConfiguration {
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
+		// v6. lamda
 		http
-			.requiresChannel(channel -> channel
+		.requiresChannel(channel -> channel
 				.anyRequest().requiresSecure() // Bắt buộc HTTPS
 			)
 			.headers(headers -> headers
@@ -211,39 +211,33 @@ public class SecurityConfiguration {
 					.maxAgeInSeconds(31536000) // 1 năm
 				)
 			)
-			.authorizeHttpRequests(authorize -> authorize
+		.authorizeHttpRequests(authorize -> authorize
 				.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
-				.requestMatchers("/", "/login", "/product/**", "/register", "/products/**", "/client/**", "/css/**", "/js/**", "/images/**").permitAll()
-				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.anyRequest().authenticated()
-			)
-			.oauth2Login(oauth2 -> oauth2
-				.loginPage("/login")
-				.defaultSuccessUrl("/", true)
-				.failureUrl("/login?error")
-				.userInfoEndpoint(user -> user.userService(new CustomOAuth2UserService(userService)))
-			)
-			.sessionManagement(sessionManagement -> sessionManagement
-				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-				.invalidSessionUrl("/logout?expired")
-				.maximumSessions(1)
-				.maxSessionsPreventsLogin(false)
-			)
-			.logout(logout -> logout
-				.deleteCookies("JSESSIONID")
-				.invalidateHttpSession(true)
-			)
-			.rememberMe(r -> r.rememberMeServices(rememberMeServices()))
-			.formLogin(formLogin -> formLogin
-				.loginPage("/login")
-				.failureUrl("/login?error")
-				.successHandler(customSuccessHandler())
+
+				.requestMatchers("/", "/login", "/product/**", "/register", "/products/**", "/client/**", "/css/**",
+						"/js/**", "/images/**")
 				.permitAll()
-			)
-			.exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+
+				.anyRequest().authenticated())
+
+		.oauth2Login(
+						oauth2 -> oauth2.loginPage("/login").defaultSuccessUrl("/", true).failureUrl("/login?error")
+								.userInfoEndpoint(user -> user.userService(new CustomOAuth2UserService(userService))))
+
+				.sessionManagement((sessionManagement) -> sessionManagement
+						.sessionCreationPolicy(SessionCreationPolicy.ALWAYS).invalidSessionUrl("/logout?expired")
+						.maximumSessions(1).maxSessionsPreventsLogin(false))
+
+				.logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
+
+				.rememberMe(r -> r.rememberMeServices(rememberMeServices()))
+				.formLogin(formLogin -> formLogin.loginPage("/login").failureUrl("/login?error")
+						.successHandler(customSuccessHandler()).permitAll())
+				.exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
 
 		return http.build();
 	}
-
 
 }
