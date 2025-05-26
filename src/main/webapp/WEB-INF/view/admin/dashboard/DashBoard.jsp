@@ -43,7 +43,8 @@
 								<div class="card-body">Số lượng User (${countUsers})</div>
 								<div
 									class="card-footer d-flex align-items-center justify-content-between">
-									<a class="small text-white stretched-link" href="/admin/user">Chi tiết</a>
+									<a class="small text-white stretched-link" href="/admin/user">Chi
+										tiết</a>
 									<div class="small text-white">
 										<i class="fas fa-angle-right"></i>
 									</div>
@@ -55,7 +56,8 @@
 								<div class="card-body">Số lượng Product (${countProducts})</div>
 								<div
 									class="card-footer d-flex align-items-center justify-content-between">
-									<a class="small text-white stretched-link" href="/admin/product">Chi tiết</a>
+									<a class="small text-white stretched-link"
+										href="/admin/product">Chi tiết</a>
 									<div class="small text-white">
 										<i class="fas fa-angle-right"></i>
 									</div>
@@ -67,7 +69,8 @@
 								<div class="card-body">Số lượng Order (${countOrders})</div>
 								<div
 									class="card-footer d-flex align-items-center justify-content-between">
-									<a class="small text-white stretched-link" href="/admin/order">Chi tiết</a>
+									<a class="small text-white stretched-link" href="/admin/order">Chi
+										tiết</a>
 									<div class="small text-white">
 										<i class="fas fa-angle-right"></i>
 									</div>
@@ -88,7 +91,7 @@
 		crossorigin="anonymous"></script>
 	<script src="js/scripts.js"></script>
 	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
 		crossorigin="anonymous"></script>
 	<script src="js/chart-area-demo.js"></script>
 	<script src="js/chart-bar-demo.js"></script>
