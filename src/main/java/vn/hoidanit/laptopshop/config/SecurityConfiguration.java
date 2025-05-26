@@ -200,34 +200,50 @@ public class SecurityConfiguration {
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
-		// v6. lamda
-		http.authorizeHttpRequests(authorize -> authorize
-						.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
-
-						.requestMatchers("/", "/login", "/product/**", "/register", "/products/**", "/client/**",
-								"/css/**", "/js/**", "/images/**")
-						.permitAll()
-
-						.requestMatchers("/admin/**").hasRole("ADMIN")
-
-						.anyRequest().authenticated())
-
-				.oauth2Login(
-						oauth2 -> oauth2.loginPage("/login").defaultSuccessUrl("/", true).failureUrl("/login?error")
-								.userInfoEndpoint(user -> user.userService(new CustomOAuth2UserService(userService))))
-
-				.sessionManagement((sessionManagement) -> sessionManagement
-						.sessionCreationPolicy(SessionCreationPolicy.ALWAYS).invalidSessionUrl("/logout?expired")
-						.maximumSessions(1).maxSessionsPreventsLogin(false))
-
-				.logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
-
-				.rememberMe(r -> r.rememberMeServices(rememberMeServices()))
-				.formLogin(formLogin -> formLogin.loginPage("/login").failureUrl("/login?error")
-						.successHandler(customSuccessHandler()).permitAll())
-				.exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+		http
+			.requiresChannel(channel -> channel
+				.anyRequest().requiresSecure() // Bắt buộc HTTPS
+			)
+			.headers(headers -> headers
+				.httpStrictTransportSecurity(hsts -> hsts
+					.includeSubDomains(true)
+					.preload(true)
+					.maxAgeInSeconds(31536000) // 1 năm
+				)
+			)
+			.authorizeHttpRequests(authorize -> authorize
+				.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
+				.requestMatchers("/", "/login", "/product/**", "/register", "/products/**", "/client/**", "/css/**", "/js/**", "/images/**").permitAll()
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.anyRequest().authenticated()
+			)
+			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/login")
+				.defaultSuccessUrl("/", true)
+				.failureUrl("/login?error")
+				.userInfoEndpoint(user -> user.userService(new CustomOAuth2UserService(userService)))
+			)
+			.sessionManagement(sessionManagement -> sessionManagement
+				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+				.invalidSessionUrl("/logout?expired")
+				.maximumSessions(1)
+				.maxSessionsPreventsLogin(false)
+			)
+			.logout(logout -> logout
+				.deleteCookies("JSESSIONID")
+				.invalidateHttpSession(true)
+			)
+			.rememberMe(r -> r.rememberMeServices(rememberMeServices()))
+			.formLogin(formLogin -> formLogin
+				.loginPage("/login")
+				.failureUrl("/login?error")
+				.successHandler(customSuccessHandler())
+				.permitAll()
+			)
+			.exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
 
 		return http.build();
 	}
+
 
 }
