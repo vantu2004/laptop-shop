@@ -64,12 +64,13 @@ public class SecurityConfiguration {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
 		// v6. lamda
-		http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+		http
+		.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 				.requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
 
-				.headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(
-						"default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://trusted.cdn.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self';")))
+//				.headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(
+//						"default-src 'self'; script-src 'self' https://trusted.cdn.com; style-src 'self' https://trusted.cdn.com; img-src 'self' data:; frame-ancestors 'none'; form-action 'self';")))
 
 				.authorizeHttpRequests(authorize -> authorize
 						.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
