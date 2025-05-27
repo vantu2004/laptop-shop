@@ -23,11 +23,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// trùng kiểu User trong security nên khai báo tường minh, lấy thông tin người dùng bằng email (username)
-		vn.hoidanit.laptopshop.domain.User user = this.userService.getUserByEmail(username);
+		
+		//vn.hoidanit.laptopshop.domain.User user = this.userService.getUserByEmail(username);
+		
+		// Thử sử dụng native query để kiểm tra xem có bị injection hay không
+		System.out.println(username); //In ra các injections
+		vn.hoidanit.laptopshop.domain.User user = this.userService.getUserByEmailInjection(username);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("Không tìm thấy người dùng");
+			
 		}
+		
 		
 		// trả về kiểu User của security
 		// lớp User của security đang triển khai interface Userdetails
