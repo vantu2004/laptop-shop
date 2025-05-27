@@ -11,7 +11,7 @@
     <meta name="description" content="Văn Tú - Dự án laptopshop" />
     <meta name="author" content="Văn Tú" />
     <title>Delete</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/css/style.min.css" rel="stylesheet" />
     <link href="/css/styles.css" rel="stylesheet" />
 
 </head>

@@ -14,10 +14,10 @@
 <meta name="author" content="Văn Tú" />
 <title>Dashboard - Văn Tú</title>
 <link
-	href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
+	href="/css/style.min.css"
 	rel="stylesheet" />
 <link href="css/styles.css" rel="stylesheet" />
-<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
+<script src="/js/all.js"
 	crossorigin="anonymous"></script>
 </head>
 
