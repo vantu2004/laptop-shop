@@ -27,7 +27,7 @@
                         });
                     });
                 </script>
-<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
+<script src="/js/all.js"
 	crossorigin="anonymous"></script>
 </head>
 

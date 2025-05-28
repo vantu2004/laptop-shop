@@ -14,7 +14,7 @@
 <meta name="author" content="" />
 <title>Login</title>
 <link href="css/styles.css" rel="stylesheet" />
-<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
+<script src="/js/all.js"
 	crossorigin="anonymous"></script>
 </head>
 <body class="bg-primary">
@@ -63,7 +63,7 @@
 										</div>
 									</form>
 								</div>
-								<div>
+							<!--<div>
 									<div style="text-align: center">
 										<span>Hoặc</span>
 									</div>
@@ -79,7 +79,7 @@
 											src="/client/img/provider/default-github.png" />
 										</a>
 									</div>
-								</div>
+								</div>-->
 								<div class="card-footer text-center py-3">
 									<div class="small">
 										<a href="/register">Need an account? Sign up!</a>
