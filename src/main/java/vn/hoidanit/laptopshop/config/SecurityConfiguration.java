@@ -67,18 +67,29 @@ public class SecurityConfiguration {
 	            .requiresChannel(channel -> channel
 	                .anyRequest().requiresSecure())
 	            .headers(headers -> headers
-	                .httpStrictTransportSecurity(hsts -> hsts
-	                    .includeSubDomains(true)
-	                    .preload(true)
-	                    .maxAgeInSeconds(31536000)))
+	            	    .contentSecurityPolicy(csp -> csp.policyDirectives(
+	            	            "default-src 'self'; " +
+	            	            "script-src 'self' https://cdn.jsdelivr.net https://ajax.googleapis.com https://cdnjs.cloudflare.com; " +
+	            	            "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; " +
+	            	            "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
+	            	            "img-src 'self' data:; " +
+	            	            "frame-ancestors 'none'; " +
+	            	            "form-action 'self'; " +
+	            	            "connect-src 'self';"
+	            	        ))
+	                    .httpStrictTransportSecurity(hsts -> hsts
+	                            .includeSubDomains(true)
+	                            .preload(true)
+	                            .maxAgeInSeconds(31536000)
+	                    ))
 	            .authorizeHttpRequests(authorize -> authorize
 	                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
 	                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
 	                .anyRequest().authenticated())
-//	            .csrf(csrf -> csrf
-//	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//	                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-//	                .requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
+	            .csrf(csrf -> csrf
+	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+	                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+	                .requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
 	            .oauth2Login(oauth2 -> oauth2
 	                .loginPage("/login")
 	                .defaultSuccessUrl("/", true)
@@ -106,7 +117,8 @@ public class SecurityConfiguration {
 	    }
 
 	private static class CsrfProtectionMatcher implements RequestMatcher {
-		private static final Pattern CSRF_PATTERN = Pattern.compile("^[a-f0-9]{32}$");
+		private static final Pattern CSRF_PATTERN = 
+				Pattern.compile("^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$");
 
 		@Override
 		public boolean matches(HttpServletRequest request) {
