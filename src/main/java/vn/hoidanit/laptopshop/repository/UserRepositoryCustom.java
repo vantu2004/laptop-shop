@@ -18,10 +18,7 @@ public class UserRepositoryCustom {
     // Sử dụng native sql -> dễ bị SQL Injection
     public User findByEmailInjection(String email) {
         String sql = "SELECT * FROM users WHERE email = '" + email + "'";
-        //String sql = "SELECT * FROM users WHERE email = :email";
-
         Query query = entityManager.createNativeQuery(sql, User.class);
-        //query.setParameter("email", email);
         List<User> result = query.getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
