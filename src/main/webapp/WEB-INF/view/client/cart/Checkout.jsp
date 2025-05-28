@@ -14,10 +14,10 @@
 <meta content="" name="description">
 
 <!-- Google Web Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
 <link
-	href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+	href="/client/css/googleapis.css"
 	rel="stylesheet">
 
 <!-- Icon Font Stylesheet -->
@@ -224,10 +224,9 @@
 
 
 	<!-- JavaScript Libraries -->
-	<script
-		src="/js/jquery.min.js"></script>
-	<script
-		src="/js/bootstrap.bundle.min.js"></script>
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
 	<script src="/client/lib/easing/easing.min.js"></script>
 	<script src="/client/lib/waypoints/waypoints.min.js"></script>
 	<script src="/client/lib/lightbox/js/lightbox.min.js"></script>

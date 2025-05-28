@@ -64,8 +64,7 @@ public class SecurityConfiguration {
 	 @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
 	        http
-	            .requiresChannel(channel -> channel
-	                .anyRequest().requiresSecure())
+
 	            .headers(headers -> headers
 	            	    .contentSecurityPolicy(csp -> csp.policyDirectives(
 	            	            "default-src 'self'; " +
@@ -117,6 +116,7 @@ public class SecurityConfiguration {
 	    }
 
 	private static class CsrfProtectionMatcher implements RequestMatcher {
+
 		private static final Pattern CSRF_PATTERN = 
 				Pattern.compile("^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$");
 

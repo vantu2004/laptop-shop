@@ -48,12 +48,5 @@ public class GlobalExceptionHandler {
 		return "error/duplicate-key"; // Bạn nên tạo file duplicate-key.jsp hoặc .html
 	}
 
-//	// Xử lý tất cả các exception khác
-//	@ExceptionHandler(Exception.class)
-//	public String handleAllExceptions(Exception ex, HttpServletRequest request, Model model) {
-//		System.err.println("Lỗi không xác định tại URL: " + request.getRequestURL());
-//		ex.printStackTrace();
-//		model.addAttribute("errorMessage", "Hệ thống đang gặp sự cố. Vui lòng thử lại sau.");
-//		return "error/default";
-//	}
+
 }

@@ -63,7 +63,7 @@
 										</div>
 									</form>
 								</div>
-								<div>
+							<!--<div>
 									<div style="text-align: center">
 										<span>Hoặc</span>
 									</div>
@@ -75,7 +75,7 @@
 											src="/client/img/provider/default-google.png" />
 										</a>
 									</div>
-								</div>
+								</div>-->
 								<div class="card-footer text-center py-3">
 									<div class="small">
 										<a href="/register">Need an account? Sign up!</a>
