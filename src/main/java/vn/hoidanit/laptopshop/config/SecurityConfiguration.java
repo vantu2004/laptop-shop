@@ -68,15 +68,16 @@ public class SecurityConfiguration {
 	            .requiresChannel(channel -> channel
 	                .anyRequest().requiresSecure())
 	            .headers(headers -> headers
-	                    .contentSecurityPolicy(csp -> csp.policyDirectives(
-	                            "default-src 'self'; " +
-	                            "script-src 'self' https://cdn.jsdelivr.net https://ajax.googleapis.com; " +
-	                            "style-src 'self' https://cdn.jsdelivr.net; " +
-	                            "img-src 'self' data:; " +
-	                            "frame-ancestors 'none'; " +
-	                            "form-action 'self'; " +
-	                            "connect-src 'self';"
-	                    ))
+	            	    .contentSecurityPolicy(csp -> csp.policyDirectives(
+	            	            "default-src 'self'; " +
+	            	            "script-src 'self' https://cdn.jsdelivr.net https://ajax.googleapis.com https://cdnjs.cloudflare.com; " +
+	            	            "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; " +
+	            	            "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
+	            	            "img-src 'self' data:; " +
+	            	            "frame-ancestors 'none'; " +
+	            	            "form-action 'self'; " +
+	            	            "connect-src 'self';"
+	            	        ))
 	                    .httpStrictTransportSecurity(hsts -> hsts
 	                            .includeSubDomains(true)
 	                            .preload(true)
