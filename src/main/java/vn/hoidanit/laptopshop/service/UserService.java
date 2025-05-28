@@ -14,18 +14,21 @@ import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
 import vn.hoidanit.laptopshop.repository.RoleRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.repository.UserRepositoryCustom;
 
 @Service
 public class UserService {
 
 	// Dependency injection
 	private final UserRepository userRepository;
+	private final UserRepositoryCustom userRepositoryCustom;
 	private final RoleRepository roleRepository;
 	private final ProductRepository productRepository; 
 	private final OrderRepository orderRepository; 
 
-	public UserService(UserRepository userRepository, RoleRepository roleRepository, ProductRepository productRepository, OrderRepository orderRepository) {
+	public UserService(UserRepository userRepository, UserRepositoryCustom userRepositoryCustom, RoleRepository roleRepository, ProductRepository productRepository, OrderRepository orderRepository) {
 		this.userRepository = userRepository;
+		this.userRepositoryCustom = userRepositoryCustom;
 		this.roleRepository = roleRepository;
 		this.productRepository = productRepository;
 		this.orderRepository = orderRepository;
@@ -70,6 +73,10 @@ public class UserService {
 	public User getUserByEmail(String email) {
 		return this.userRepository.findByEmail(email);
 	}
+	
+	 public User getUserByEmailInjection(String email) {
+	        return userRepositoryCustom.findByEmailInjection(email);
+	    }
 	
 	public long countUsers() {
 		return this.userRepository.count();

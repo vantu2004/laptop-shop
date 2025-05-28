@@ -14,7 +14,7 @@
 <meta name="author" content="Văn Tú" />
 <title>Delete</title>
 <link
-	href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
+	href="/css/style.min.css"
 	rel="stylesheet" />
 <link href="/css/styles.css" rel="stylesheet" />
 
@@ -69,7 +69,7 @@
 		</div>
 	</div>
 	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		src="/js/bootstrap.bundle.min.js"
 		crossorigin="anonymous"></script>
 	<script src="js/scripts.js"></script>
 

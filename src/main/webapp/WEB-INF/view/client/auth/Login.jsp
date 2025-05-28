@@ -73,10 +73,6 @@
 											title="Đăng nhập với Google" style="margin: 10px"> <img
 											height="40" width="40"
 											src="/client/img/provider/default-google.png" />
-										</a> <a href="/oauth2/authorization/github"
-											title="Đăng nhập với Github" style="margin: 10px"> <img
-											height="40" width="40"
-											src="/client/img/provider/default-github.png" />
 										</a>
 									</div>
 								</div>-->
@@ -93,7 +89,7 @@
 		</div>
 	</div>
 	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		src="/js/bootstrap.bundle.min.js"
 		crossorigin="anonymous"></script>
 	<script src="/js/scripts.js"></script>
 </body>

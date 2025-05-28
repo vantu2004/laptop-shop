@@ -10,7 +10,10 @@
 <title>Trang chủ - Laptopshop</title>
 
 <!-- Google Web Fonts -->
+
+
 <link
+
 	href="/client/css/googleapis.css"
 	rel="stylesheet">
 
@@ -166,10 +169,9 @@
 
 
 	<!-- JavaScript Libraries -->
-	<script
-		src="/js/min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/min.js"></script>
+	<script src="/js/bootstrap.bundle.min.js"></script>
 	<script src="/client/lib/easing/easing.min.js"></script>
 	<script src="/client/lib/waypoints/waypoints.min.js"></script>
 	<script src="/client/lib/lightbox/js/lightbox.min.js"></script>
@@ -178,7 +180,7 @@
 	<!-- Template Javascript -->
 	<script src="/client/js/main.js"></script>
 	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+	<script src="/js/jquery.toast.min.js"></script>
 </body>
 
 </html>
