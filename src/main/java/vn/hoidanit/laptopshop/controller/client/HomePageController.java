@@ -39,9 +39,9 @@ public class HomePageController {
 	private String getHomePage(Model model, HttpServletRequest request) {
 		Pageable pageable = PageRequest.of(0, 1000);
 		Page<Product> pageProducts = this.productservice.getAllProduct(pageable);
-		//	convert Page sang List
+		// convert Page sang List
 		List<Product> listProducts = pageProducts.getContent();
-		
+
 		model.addAttribute("products", listProducts);
 
 		return "client/homepage/HomePage";
@@ -88,7 +88,7 @@ public class HomePageController {
 	private String getLoginPage(Model model, @ModelAttribute("registerUser") RegisterDTO registerDTO) {
 		return "client/auth/Login";
 	}
-	
+
 	@GetMapping("/access-deny")
 	private String getDenyPage(Model model) {
 

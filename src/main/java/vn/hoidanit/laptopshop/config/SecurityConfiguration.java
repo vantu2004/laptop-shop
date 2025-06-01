@@ -64,13 +64,13 @@ public class SecurityConfiguration {
 	 @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
 	        http
-
+	        	.csrf(csrf -> csrf.disable())
 	            .headers(headers -> headers
 	            	    .contentSecurityPolicy(csp -> csp.policyDirectives(
 	            	            "default-src 'self'; " +
-	            	            "script-src 'self' https://cdn.jsdelivr.net https://ajax.googleapis.com https://cdnjs.cloudflare.com; " +
-	            	            "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline'; " +
-	            	            "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
+	            	            "script-src 'self' https://cdn.jsdelivr.net https://ajax.googleapis.com https://cdnjs.cloudflare.com https://use.fontawesome.com; " +
+	            	            "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com https://use.fontawesome.com 'unsafe-inline'; " +
+	            	            "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://use.fontawesome.com; " +
 	            	            "img-src 'self' data:; " +
 	            	            "frame-ancestors 'none'; " +
 	            	            "form-action 'self'; " +
@@ -85,10 +85,10 @@ public class SecurityConfiguration {
 	                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
 	                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
 	                .anyRequest().authenticated())
-	            .csrf(csrf -> csrf
-	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-	                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-	                .requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
+//	            .csrf(csrf -> csrf
+//	                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//	                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+//	                .requireCsrfProtectionMatcher(new CsrfProtectionMatcher()))
 	            .oauth2Login(oauth2 -> oauth2
 	                .loginPage("/login")
 	                .defaultSuccessUrl("/", true)

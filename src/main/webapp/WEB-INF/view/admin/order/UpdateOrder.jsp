@@ -18,8 +18,7 @@
 
 <script src="/js/all.js"
 	crossorigin="anonymous"></script>
-<script
-	src="/js/jquery.min.js"></script>
+
 
 
 </head>

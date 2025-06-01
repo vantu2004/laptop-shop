@@ -14,7 +14,8 @@
 <meta name="author" content="" />
 <title>Login</title>
 <link href="css/styles.css" rel="stylesheet" />
-<script src="/js/all.js"
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" 
+	integrity="sha384-QM3vQ1ro1SUguF26PKxC17ZxibTi/ixpgL9NRL5/RHw1AmA0pfSeGCh6k+uqbyzJ" 
 	crossorigin="anonymous"></script>
 </head>
 <body class="bg-primary">

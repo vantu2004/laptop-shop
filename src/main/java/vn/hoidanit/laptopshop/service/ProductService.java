@@ -193,7 +193,6 @@ public class ProductService {
 			}
 
 			Product p = this.productRepository.findById(productId);
-
 			// check sản phẩm đã tồn tại trog giỏ hàng ngời dùng đó chưa
 			CartDetail cd = this.cartDetailRepository.findByCartAndProduct(cart, p);
 

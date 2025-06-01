@@ -346,17 +346,23 @@
 	    }
 
 	    const productId = $(this).attr('data-product-id');
-	    const token = $("meta[name='_csrf']").attr("content");
-	    const header = $("meta[name='_csrf_header']").attr("content");
+	    //const token = $("meta[name='_csrf']").attr("content");
+	    //const header = $("meta[name='_csrf_header']").attr("content");
 
 	    $.ajax({
-	        url: `${window.location.origin}/api/add-product-to-cart`,
-	        beforeSend: function (xhr) {
+	        url: `${window.location.origin}/add-product-to-cart`,
+	        /*beforeSend: function (xhr) {
 	            xhr.setRequestHeader(header, token);
-	        },
+	        }*/
 	        type: "POST",
-	        data: JSON.stringify({ quantity: 1, productId: productId }),
-	        contentType: "application/json",
+			//contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			data: {
+	            	quantity: 1,
+	            	productId: productId
+	        },
+	        //data: JSON.stringify({ quantity: 1, productId: productId }),
+
 
 	        success: function (response) {
 	            const sum = +response;
@@ -373,7 +379,7 @@
 	        },
 	        error: function (response) {
 	            alert("có lỗi xảy ra, check code đi ba :v")
-	            console.log("error: ", response);
+				console.log("error: ", response);
 	        }
 
 	    });
@@ -392,17 +398,22 @@
 	    }
 
 	    const productId = $(this).attr('data-product-id');
-	    const token = $("meta[name='_csrf']").attr("content");
-	    const header = $("meta[name='_csrf_header']").attr("content");
-	    const quantity = $("#cartDetails0\\.quantity").val();
+	    //const token = $("meta[name='_csrf']").attr("content");
+	    //const header = $("meta[name='_csrf_header']").attr("content");
+	    const quantity = $("#quantity-box").val();
 	    $.ajax({
-	        url: `${window.location.origin}/api/add-product-to-cart`,
-	        beforeSend: function (xhr) {
+	        url: `${window.location.origin}/add-product-from-view-detail`,
+	        /*beforeSend: function (xhr) {
 	            xhr.setRequestHeader(header, token);
-	        },
+	        },*/
 	        type: "POST",
-	        data: JSON.stringify({ quantity: quantity, productId: productId }),
-	        contentType: "application/json",
+	        //contentType: "application/json",
+			//data: JSON.stringify({ quantity: quantity, productId: productId }),
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			data: {
+            	quantity: quantity,
+            	productId: productId
+	        },
 
 	        success: function (response) {
 	            const sum = +response;

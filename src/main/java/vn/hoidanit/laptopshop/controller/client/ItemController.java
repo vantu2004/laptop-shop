@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,24 +52,26 @@ public class ItemController {
 		return "client/product/Detail";
 	}
 
-	@PostMapping("/add-product-to-cart/{id}")
-	public String addProductToCart(@PathVariable long id, HttpServletRequest request) {
+	@PostMapping("/add-product-to-cart")
+	public ResponseEntity<Integer> addProductToCart(@RequestParam long productId, HttpServletRequest request) {
 		// kiểm tra đã có session nào chưa, nếu chưa thì thay vì tạo mới thì nó truyền
 		// vào false và trả về null
 		HttpSession session = request.getSession(false);
 
-		long productId = id;
 		// mặc định đang là object nên phải ép
 		String email = (String) session.getAttribute("email");
 		this.productService.handleAddProductToCart(email, productId, session, 1);
+		
+		int sum = (int) session.getAttribute("sum");
 
-		return "redirect:/";
+
+		return ResponseEntity.ok().body(sum);
 	}
 
 	// xử lý ở home thì khi thêm product chỉ cần 1 là đc, nhưng trong detail product
 	// có thể thêm nhiều -> truyền động
 	@PostMapping("/add-product-from-view-detail")
-	public String handleAddProductFromViewDetail(@RequestParam("id") long id, @RequestParam("quantity") long quantity,
+	public ResponseEntity<Integer> handleAddProductFromViewDetail(@RequestParam long productId, @RequestParam long quantity,
 			HttpServletRequest request) {
 
 		// bug xảy ra vì code bên js chỉ bắt sự kiện cập nhật quantity chỉ khi click,
@@ -76,9 +79,10 @@ public class ItemController {
 
 		HttpSession session = request.getSession(false);
 		String email = (String) session.getAttribute("email");
-		this.productService.handleAddProductToCart(email, id, session, quantity);
+		this.productService.handleAddProductToCart(email, productId, session, quantity);
 
-		return "redirect:/product/" + id;
+		int sum = (int) session.getAttribute("sum");
+		return ResponseEntity.ok().body(sum);	
 	}
 
 	@GetMapping("/cart")

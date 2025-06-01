@@ -134,7 +134,9 @@
 															<div>
 																<input type="hidden" name="${_csrf.parameterName}"
 																	value="${_csrf.token}" />
-															</div> --%>
+															</div>
+															</form> --%>
+															
 															<button data-product-id="${product.id}"
 																class="btnAddToCartHomepage mx-auto btn border border-secondary rounded-pill px-3 text-primary">
 																<i class="fa fa-shopping-bag me-2 text-primary"></i> Add
@@ -169,7 +171,6 @@
 
 
 	<!-- JavaScript Libraries -->
-	<script src="/js/jquery.min.js"></script>
 	<script src="/js/min.js"></script>
 	<script src="/js/bootstrap.bundle.min.js"></script>
 	<script src="/client/lib/easing/easing.min.js"></script>

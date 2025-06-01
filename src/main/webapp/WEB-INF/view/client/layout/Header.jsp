@@ -42,7 +42,6 @@
 						<!-- account -->
 						<div class="dropdown my-auto">
 							<a href="#" class="dropdown" role="button" id="dropdownMenuLink" title="User"
-								data-bs-toggle="dropdown" aria-expanded="false"
 								data-bs-toggle="dropdown" aria-expanded="false"> <i
 								class="fas fa-user fa-2x" ></i>
 							</a>

@@ -149,7 +149,6 @@
 
 
 	<!-- JavaScript Libraries -->
-	<script src="/js/jquery.min.js"></script>
 	<script src="/js/min.js"></script>
 	<script src="/js/bootstrap.bundle.min.js"></script>
 	<script src="/client/lib/easing/easing.min.js"></script>

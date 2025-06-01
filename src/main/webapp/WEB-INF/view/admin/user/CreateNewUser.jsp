@@ -17,7 +17,7 @@
 
 <!-- dùng jquery để preview upload file -->
 <script
-	src="/js/jquery.min.js"></script>
+	src="/js/min.js"></script>
 <script>
                     $(document).ready(() => {
                         const avatarFile = $("#avatarFile");
