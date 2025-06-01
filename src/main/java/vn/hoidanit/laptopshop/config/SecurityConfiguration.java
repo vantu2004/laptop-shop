@@ -17,6 +17,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
+
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.hoidanit.laptopshop.service.CustomOAuth2UserService;
@@ -63,7 +64,7 @@ public class SecurityConfiguration {
 
 	 @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
-	        http
+	        http.csrf(csrf -> csrf.disable()) 
 
 	            .headers(headers -> headers
 	            	    .contentSecurityPolicy(csp -> csp.policyDirectives(
