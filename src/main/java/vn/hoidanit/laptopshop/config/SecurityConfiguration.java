@@ -64,7 +64,7 @@ public class SecurityConfiguration {
 	 @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
 	        http
-	        	.csrf((csrf) -> csrf.disable())
+//	        	.csrf((csrf) -> csrf.disable())
 	            .requiresChannel(channel -> channel
 	                .anyRequest().requiresSecure())
 	            .headers(headers -> headers

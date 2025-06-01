@@ -40,15 +40,31 @@ public class ItemController {
 		this.vNPayService = vNPayService;
 	}
 
+//	@GetMapping("/product/{id}")
+//	public String getHomePage(Model model, @PathVariable long id) {
+//		Product product = this.productService.getInfoProductById(id);
+//		model.addAttribute("product", product);
+//		model.addAttribute("id", id);
+//
+//		System.out.println("PRODUCT ID: " + id);
+//
+//		return "client/product/Detail";
+//	}
 	@GetMapping("/product/{id}")
-	public String getHomePage(Model model, @PathVariable long id) {
-		Product product = this.productService.getInfoProductById(id);
-		model.addAttribute("product", product);
-		model.addAttribute("id", id);
+	public String getHomePage(Model model, @PathVariable String id) {
+	    try {
+	        long parsedId = Long.parseLong(id);
+	        Product product = this.productService.getInfoProductById(parsedId);
+	        model.addAttribute("product", product);
+	        model.addAttribute("id", parsedId);
 
-		System.out.println("PRODUCT ID: " + id);
+	        System.out.println("PRODUCT ID: " + parsedId);
 
-		return "client/product/Detail";
+	        return "client/product/Detail";
+
+	    } catch (NumberFormatException e) {
+	        throw new IllegalArgumentException("ID không hợp lệ: " + id);
+	    }
 	}
 
 	@PostMapping("/add-product-to-cart/{id}")

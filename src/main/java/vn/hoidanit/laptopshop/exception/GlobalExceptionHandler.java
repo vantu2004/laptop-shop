@@ -7,6 +7,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,7 +18,7 @@ public class GlobalExceptionHandler {
 		System.err.println("NullPointerException tại URL: " + request.getRequestURL());
 		ex.printStackTrace();
 		model.addAttribute("errorMessage", "Dữ liệu không hợp lệ hoặc không tìm thấy. Vui lòng kiểm tra lại.");
-		return "error/default"; // JSP: /WEB-INF/view/error/customError.jsp
+		return "error/default";
 	}
 
 	// Xử lý IllegalArgumentException
@@ -45,7 +46,14 @@ public class GlobalExceptionHandler {
 		System.err.println("Lỗi Duplicate Key tại URL: " + request.getRequestURL());
 		ex.printStackTrace();
 		model.addAttribute("errorMessage", "Dữ liệu đã tồn tại hoặc trùng lặp. Vui lòng thử lại.");
-		return "error/duplicate-key"; // Bạn nên tạo file duplicate-key.jsp hoặc .html
+		return "error/default";
+	}
+	
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public String handle404(NoHandlerFoundException ex, HttpServletRequest request, Model model) {
+		System.err.println("404 Not Found: " + request.getRequestURL());
+		model.addAttribute("errorMessage", "Trang không tồn tại.");
+		return "error/default";
 	}
 
 
